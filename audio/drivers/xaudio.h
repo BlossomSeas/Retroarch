@@ -18,7 +18,7 @@
  * Windows OS itself (starting from Windows 8). Since UWP lets you access
  * only libraries that are built-in to the OS, the headers had to be
  * upgraded to the newer version to get audio support working. */
-#include "xaudio29.h"
+#include "xaudio27.h"
 #else
 /* The old version still has to be there since XAudio 2.8 is not available
  * on Windows 7 and earlier */

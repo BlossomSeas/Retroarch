@@ -780,13 +780,21 @@ static void *resampler_sinc_new(const struct resampler_config *config,
          re->enable_avx    = 1;
          break;
       case RESAMPLER_QUALITY_NORMAL:
-      case RESAMPLER_QUALITY_DONTCARE:
          cutoff            = 0.825;
          sidelobes         = 8;
          re->phase_bits    = 8;
          re->subphase_bits = 16;
          re->window_type   = SINC_WINDOW_KAISER;
          re->kaiser_beta   = 5.5;
+         re->enable_avx    = 0;
+         break;
+      case RESAMPLER_QUALITY_DONTCARE:
+         cutoff            = 0.962;
+         sidelobes         = 16;
+         re->phase_bits    = 10;
+         re->subphase_bits = 14;
+         re->window_type   = SINC_WINDOW_KAISER;
+         re->kaiser_beta   = 14.5;
          re->enable_avx    = 0;
          break;
    }

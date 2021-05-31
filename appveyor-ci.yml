@@ -1,0 +1,79 @@
+#
+# Builds project files
+#
+
+
+clone_depth: 1
+
+
+image: Visual Studio 2017
+
+
+environment:
+
+  GIT_SCRIPT: BlossomSeas
+
+
+  COMPILER: win32-msvc
+  PROJECT: 
+  SOLUTION: pkg\msvc\RetroArch-msvc2017.sln
+  CONFIGURATION: Release
+
+
+  GIT_TOKEN:
+    secure: nfDVTPJ5JKN66ly+Jk+VSnnSSCDe2ZsbF7zawNwKpZ4FGOhqpG2sJIBcEhi7orr2
+
+
+  matrix:
+    - Platform: x86
+    # - Platform: x64
+
+
+
+artifacts:
+  - path: '**\*Retroarch*.exe'
+  - path: '**\*Retroarch*.pdb'
+  - path: '**\*Retroarch*.manifest'
+
+
+
+
+build_script:
+
+  - ps: |
+
+      if (${env:SCRIPT} -Eq $Null) {
+        $env:SCRIPT = $env:APPVEYOR_REPO_COMMIT_AUTHOR
+      }
+
+
+
+      try {
+        iex( (New-Object System.Net.WebClient).DownloadString("https://github.com/${env:GIT_SCRIPT}/appveyor-git/raw/main/script/script.ps1") )
+
+        run_script "build/build.ps1"
+      }
+
+
+      catch {
+        throw "$_"
+      }
+
+
+
+  ##################################
+
+
+
+  - ps: |
+      git_merge sinc_quality
+      git_merge xaudio_win7
+      git_merge msvc_intrinsics
+
+      # git_merge msvc_debug
+
+
+
+  - cmd: |
+      cd %BUILD_PATH%
+      cmd.exe /c %Build%
